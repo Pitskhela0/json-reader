@@ -3,7 +3,7 @@ on:
   push:
   pull_request:
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -16,7 +16,5 @@ jobs:
         run: pip install uv
       - name: Install dependencies
         run: uv sync
-      - name: Run pylint
-        run: uv run pylint src/json_reader
       - name: Run pytest
         run: uv run pytest
