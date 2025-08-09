@@ -33,7 +33,7 @@ class RoomValidator(ValidationStrategy):
 
             room_id, room_name = item['id'], item['name']
 
-            if not isinstance(room_id, int) or room_id <= 0:
+            if not isinstance(room_id, int) or room_id < 0:
                 raise ValueError(f"Room ID must be positive integer, got: {room_id}")
 
             if not isinstance(room_name, str) or not room_name.strip():
@@ -63,13 +63,13 @@ class StudentValidator(ValidationStrategy):
 
             student_id, student_name, room_id = item['id'], item['name'], item['room']
 
-            if not isinstance(student_id, int) or student_id <= 0:
+            if not isinstance(student_id, int) or student_id < 0:
                 raise ValueError(f"Student ID must be positive integer, got: {student_id}")
 
             if not isinstance(student_name, str) or not student_name.strip():
                 raise ValueError(f"Student name must be non-empty string, got: {student_name}")
 
-            if not isinstance(room_id, int) or room_id <= 0:
+            if not isinstance(room_id, int) or room_id < 0:
                 raise ValueError(f"Room ID must be positive integer, got: {room_id}")
 
             return True
