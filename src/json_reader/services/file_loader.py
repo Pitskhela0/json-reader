@@ -1,20 +1,31 @@
-from typing import Generator
+from collections.abc import Generator
 import ijson
 
 
 class FileLoader:
+    """Utility class for streaming JSON data from a file."""
+
     @staticmethod
     def load_file_data(path: str) -> Generator[dict, None, None]:
         """
-        Load items from file one by one.
-        :param path: Path to JSON file
-        :yields: dict: JSON item
+        Stream JSON items from the given file one by one.
+
+        Args:
+            path: Path to the JSON file.
+
+        Yields:
+            dict: A JSON object parsed from the file.
+
+        Raises:
+            FileNotFoundError: If the file does not exist.
+            PermissionError: If access to the file is denied.
+            ValueError: If the file contains invalid JSON.
+            OSError: If an unexpected I/O error occurs.
         """
         try:
-            with open(path, 'r') as file:
+            with open(path, "r", encoding="utf-8") as file:
                 try:
-                    for item in ijson.items(file, 'item'):
-                        yield item
+                    yield from ijson.items(file, "item")
                 except ijson.JSONError as e:
                     raise ValueError(f"Invalid JSON format in file: {path}") from e
         except (FileNotFoundError, PermissionError):
