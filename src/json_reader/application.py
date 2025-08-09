@@ -19,11 +19,15 @@ def start_application() -> None:
     4. Export the result in the specified format.
     """
     try:
-        student_file, room_file, output_format, output_destination = CLIParser.parse_cli()
+        student_file, room_file, output_format, output_destination = (
+            CLIParser.parse_cli()
+        )
         logger.info(student_file, room_file, output_format, output_destination)
 
-        rooms = DataFilter.filter_data(FileLoader.load_file_data(room_file), 'room')
-        students = DataFilter.filter_data(FileLoader.load_file_data(student_file), 'student')
+        rooms = DataFilter.filter_data(FileLoader.load_file_data(room_file), "room")
+        students = DataFilter.filter_data(
+            FileLoader.load_file_data(student_file), "student"
+        )
 
         combined_data = DataCombiner.combine_students_with_rooms(students, rooms)
 

@@ -5,8 +5,8 @@ class ExporterFactory:
     """Factory to create appropriate exporter instances"""
 
     _exporters = {
-        'json': JSONExporter,
-        'xml': XMLExporter,
+        "json": JSONExporter,
+        "xml": XMLExporter,
     }
 
     @classmethod

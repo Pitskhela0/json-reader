@@ -8,7 +8,7 @@ class DataCombiner:
 
     @staticmethod
     def group_students_by_room_id(
-        students: Generator[dict[str, Any], None, None]
+        students: Generator[dict[str, Any], None, None],
     ) -> dict[int, list[dict[str, Any]]]:
         """
         Group students by their room ID.
@@ -27,10 +27,9 @@ class DataCombiner:
         for student in students:
             try:
                 room_id = student["room"]
-                students_by_room[room_id].append({
-                    "id": student["id"],
-                    "name": student["name"]
-                })
+                students_by_room[room_id].append(
+                    {"id": student["id"], "name": student["name"]}
+                )
             except KeyError as e:
                 raise ValueError(f"Student record missing required key: {e}") from e
 
@@ -39,7 +38,7 @@ class DataCombiner:
     @staticmethod
     def combine_students_with_rooms(
         students: Generator[dict[str, Any], None, None],
-        rooms: Generator[dict[str, Any], None, None]
+        rooms: Generator[dict[str, Any], None, None],
     ) -> Generator[dict[str, Any], None, None]:
         """
         Combine student and room data into a unified structure.
@@ -61,7 +60,7 @@ class DataCombiner:
                 yield {
                     "id": room["id"],
                     "name": room["name"],
-                    "students": students_by_room.get(room["id"], [])
+                    "students": students_by_room.get(room["id"], []),
                 }
             except KeyError as e:
                 raise ValueError(f"Room record missing required key: {e}") from e

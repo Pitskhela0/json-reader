@@ -11,10 +11,13 @@ logger = logging.getLogger(__name__)
 
 class Exporter(ABC):
     """Abstract base class for all exporters"""
+
     default_path_counter = 0
 
     @abstractmethod
-    def export_file(self, data_generator: Generator[Dict[str, Any], None, None], output_path: str) -> None:
+    def export_file(
+        self, data_generator: Generator[Dict[str, Any], None, None], output_path: str
+    ) -> None:
         """Export data to file"""
         pass
 
@@ -22,7 +25,9 @@ class Exporter(ABC):
 class JSONExporter(Exporter):
     """JSON format exporter"""
 
-    def export_file(self, data_generator: Generator[Dict[str, Any], None, None], output_path: str) -> None:
+    def export_file(
+        self, data_generator: Generator[Dict[str, Any], None, None], output_path: str
+    ) -> None:
         """
         Export data to JSON format.
 
@@ -52,7 +57,9 @@ class JSONExporter(Exporter):
 class XMLExporter(Exporter):
     """XML format exporter"""
 
-    def export_file(self, data_generator: Generator[Dict[str, Any], None, None], output_path: str) -> None:
+    def export_file(
+        self, data_generator: Generator[Dict[str, Any], None, None], output_path: str
+    ) -> None:
         """Export data to XML format
 
         Args:
@@ -63,9 +70,9 @@ class XMLExporter(Exporter):
             Exporter.default_path_counter += 1
             output_path = f"output/default{Exporter.default_path_counter}.xml"
 
-        with open(output_path, "w", encoding='utf-8') as file:
+        with open(output_path, "w", encoding="utf-8") as file:
             file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-            file.write('<rooms>\n')
+            file.write("<rooms>\n")
 
             for room_data in data_generator:
                 room_elem = ET.Element("room", id=str(room_data["id"]))
@@ -75,14 +82,15 @@ class XMLExporter(Exporter):
 
                 students_elem = ET.SubElement(room_elem, "students")
                 for student in room_data["students"]:
-                    student_elem = ET.SubElement(students_elem, "student", id=str(student["id"]))
+                    student_elem = ET.SubElement(
+                        students_elem, "student", id=str(student["id"])
+                    )
                     student_name = ET.SubElement(student_elem, "name")
                     student_name.text = student["name"]
 
-                room_xml = ET.tostring(room_elem, encoding='unicode')
+                room_xml = ET.tostring(room_elem, encoding="unicode")
                 file.write(f"  {room_xml}\n")
 
-            file.write('</rooms>\n')
+            file.write("</rooms>\n")
 
         logger.info(f"exported XML file at {output_path}")
-

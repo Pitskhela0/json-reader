@@ -12,18 +12,17 @@ class DataFilter:
 
     @staticmethod
     def filter_data(
-            data: Generator[dict, None, None],
-            data_type: str
+        data: Generator[dict, None, None], data_type: str
     ) -> Generator[dict, None, None]:
         """
-       Takes data items one by one and only returns the valid ones.
+        Takes data items one by one and only returns the valid ones.
 
-       Args:
-           data: Stream of data items to check
-           data_type: What kind of data we're checking ('student' or 'room')
+        Args:
+            data: Stream of data items to check
+            data_type: What kind of data we're checking ('student' or 'room')
 
-       Returns:
-           Only the valid data items
+        Returns:
+            Only the valid data items
         """
         validation_context = ValidatorContext(data_type)
         for item in data:
