@@ -3,6 +3,7 @@ import argparse
 
 class CLIParser:
     """Command-line interface parser for application arguments."""
+
     @staticmethod
     def parse_cli() -> tuple[str, str, str, str]:
         """
@@ -42,9 +43,15 @@ class CLIParser:
 
         arguments = parser.parse_args()
 
+        if (arguments.output_destination != "/output" and
+                (not arguments.output_destination.endswith(".json") and
+                 not arguments.output_destination.endswith(".xml"))):
+            raise ValueError(f"Custom output path must end with .json "
+                             f"or .xml, got: {arguments.output_destination}")
+
         return (
-                arguments.student_file_path,
-                arguments.room_file_path,
-                arguments.output_format,
-                arguments.output_destination
+            arguments.student_file_path,
+            arguments.room_file_path,
+            arguments.output_format,
+            arguments.output_destination
         )
