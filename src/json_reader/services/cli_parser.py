@@ -49,6 +49,12 @@ class CLIParser:
             raise ValueError(f"Custom output path must end with .json "
                              f"or .xml, got: {arguments.output_destination}")
 
+        if arguments.output_destination.endswith(".json") and arguments.output_format == "xml":
+            raise ValueError("Output format is xml and destination types is JSON")
+
+        if arguments.output_destination.endswith(".xml") and arguments.output_format == "json":
+            raise ValueError("Output format is JSON and destination types is xml")
+
         return (
             arguments.student_file_path,
             arguments.room_file_path,
