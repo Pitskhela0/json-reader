@@ -1,20 +1,34 @@
-from .cli_parser import CLIParser
+import logging
+
+from .services.cli_parser import CLIParser
 from .services.file_loader import FileLoader
 from .services.data_combiner import DataCombiner
-from .exporters.exporter import Exporter
+from .exporters.exporter_factory import ExporterFactory
+from .services.data_filter import DataFilter
+
+logging.getLogger().setLevel(logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def start_application() -> None:
-    # parse cli commands
-    student_file_path, room_file_path, output_format, output_destination = CLIParser.parse_cli()
-    print(student_file_path, " ", room_file_path, " ", output_format, " ", output_destination)
+    """
+    Run the main application workflow:
+    1. Parse CLI arguments.
+    2. Load input data from files.
+    3. Combine students with rooms.
+    4. Export the result in the specified format.
+    """
+    try:
+        student_file, room_file, output_format, output_destination = CLIParser.parse_cli()
+        logger.info(student_file, room_file, output_format, output_destination)
 
-    # load data
-    rooms_generator = FileLoader.load_file_data(room_file_path)
-    students_generator = FileLoader.load_file_data(student_file_path)
+        rooms = DataFilter.filter_data(FileLoader.load_file_data(room_file), 'room')
+        students = DataFilter.filter_data(FileLoader.load_file_data(student_file), 'student')
 
-    # combine data
-    combined_data_generator = DataCombiner.combine_students_with_rooms(students_generator, rooms_generator)
+        combined_data = DataCombiner.combine_students_with_rooms(students, rooms)
 
-    # export in specified file
-    Exporter.export_file(combined_data_generator)
+        exporter = ExporterFactory.create_exporter(output_format)
+        exporter.export_file(combined_data, output_destination)
+    except Exception as e:
+        logger.error(f"Application failed: {e}")
+        raise
