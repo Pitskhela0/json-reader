@@ -1,7 +1,7 @@
 import logging
+from typing import Generator
 
 from .data_validator import ValidatorContext
-from typing import Generator
 
 logging.getLogger().setLevel(logging.INFO)
 logger = logging.getLogger(__name__)

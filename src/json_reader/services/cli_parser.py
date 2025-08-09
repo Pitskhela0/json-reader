@@ -22,7 +22,7 @@ class CLIParser:
             if output_dir.exists():
                 if not os.access(output_dir, os.W_OK):
                     raise ValueError(
-                        f"No write permission for output directory: {output_dir}"
+                        f"No write permission " f"for output directory: {output_dir}"
                     )
             else:
                 try:
@@ -39,7 +39,7 @@ class CLIParser:
 
         if parent_dir.exists():
             if not os.access(parent_dir, os.W_OK):
-                raise ValueError(f"No write permission for directory: {parent_dir}")
+                raise ValueError(f"No write permission " f"for directory: {parent_dir}")
         else:
             try:
                 parent_dir.mkdir(parents=True, exist_ok=True)
@@ -56,7 +56,8 @@ class CLIParser:
                 )
             else:
                 print(
-                    f"Warning: Output file {output_path} already exists and will be overwritten"
+                    f"Warning: Output file {output_path} "
+                    f"already exists and will be overwritten"
                 )
 
     @staticmethod
@@ -65,7 +66,8 @@ class CLIParser:
         Parse command-line arguments for the application.
 
         Returns:
-            tuple: (student_file_path, room_file_path, output_format, output_destination)
+            tuple: (student_file_path, room_file_path,
+             output_format, output_destination)
         """
         parser = argparse.ArgumentParser(description="parse CLI")
 
@@ -109,13 +111,13 @@ class CLIParser:
             arguments.output_destination.endswith(".json")
             and arguments.output_format == "xml"
         ):
-            raise ValueError("Output format is xml and destination types is JSON")
+            raise ValueError("Output format is " "xml and destination types is JSON")
 
         if (
             arguments.output_destination.endswith(".xml")
             and arguments.output_format == "json"
         ):
-            raise ValueError("Output format is JSON and destination types is xml")
+            raise ValueError("Output format" " is JSON and destination types is xml")
 
         try:
             CLIParser._validate_output_path(arguments.output_destination)

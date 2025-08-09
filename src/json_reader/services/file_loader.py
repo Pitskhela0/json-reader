@@ -1,6 +1,6 @@
-import ijson
-
 from collections.abc import Generator
+
+import ijson
 
 
 class FileLoader:
@@ -27,7 +27,7 @@ class FileLoader:
                 try:
                     yield from ijson.items(file, "item")
                 except ijson.JSONError as e:
-                    raise ValueError(f"Invalid JSON format in file: {path}") from e
+                    raise ValueError(f"Invalid JSON" f" format in file: {path}") from e
         except (FileNotFoundError, PermissionError):
             raise
         except OSError as e:

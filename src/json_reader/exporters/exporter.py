@@ -1,9 +1,10 @@
 from __future__ import annotations
-import logging
+
 import json
-from abc import ABC, abstractmethod
-from typing import Generator, Dict, Any
+import logging
 import xml.etree.ElementTree as ET
+from abc import ABC, abstractmethod
+from typing import Any, Dict, Generator
 
 logging.getLogger().setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
@@ -33,7 +34,8 @@ class JSONExporter(Exporter):
 
         Args:
             data_generator: Stream of room data with students
-            output_path: Target JSON file path (auto-generates if no .json extension)
+            output_path: Target JSON file path
+            (auto-generates if no .json extension)
         """
         if not output_path.endswith(".json"):
             Exporter.default_path_counter += 1
@@ -64,7 +66,8 @@ class XMLExporter(Exporter):
 
         Args:
             data_generator: Stream of room data with students
-            output_path: Target XML file path (auto-generates if no .xml extension)
+            output_path: Target XML file path
+            (auto-generates if no .xml extension)
         """
         if not output_path.endswith(".xml"):
             Exporter.default_path_counter += 1

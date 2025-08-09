@@ -1,14 +1,14 @@
 import logging
-
 from abc import ABC, abstractmethod
-from typing import Dict, Any
+from typing import Any, Dict
 
 logging.getLogger().setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 class ValidationStrategy(ABC):
-    """Base class for all validators. Each validator checks different types of data."""
+    """Base class for all validators.
+    Each validator checks different types of data."""
 
     @abstractmethod
     def validate(self, item: Dict[str, Any]) -> bool:
@@ -34,7 +34,9 @@ class RoomValidator(ValidationStrategy):
             room_id, room_name = item["id"], item["name"]
 
             if not isinstance(room_id, int) or room_id < 0:
-                raise ValueError(f"Room ID must be positive integer, got: {room_id}")
+                raise ValueError(
+                    f"Room ID must be " f"positive integer, got: {room_id}"
+                )
 
             if not isinstance(room_name, str) or not room_name.strip():
                 raise ValueError(
@@ -63,7 +65,7 @@ class StudentValidator(ValidationStrategy):
             if "id" not in item or "name" not in item or "room" not in item:
                 raise ValueError("Student data is incomplete")
 
-            student_id, student_name, room_id = item["id"], item["name"], item["room"]
+            student_id, student_name, room_id = (item["id"], item["name"], item["room"])
 
             if not isinstance(student_id, int) or student_id < 0:
                 raise ValueError(
@@ -72,11 +74,13 @@ class StudentValidator(ValidationStrategy):
 
             if not isinstance(student_name, str) or not student_name.strip():
                 raise ValueError(
-                    f"Student name must be non-empty string, got: {student_name}"
+                    f"Student name must be" f" non-empty string, got: {student_name}"
                 )
 
             if not isinstance(room_id, int) or room_id < 0:
-                raise ValueError(f"Room ID must be positive integer, got: {room_id}")
+                raise ValueError(
+                    f"Room ID must be positive" f" integer, got: {room_id}"
+                )
 
             return True
 

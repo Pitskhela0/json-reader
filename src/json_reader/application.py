@@ -1,10 +1,10 @@
 import logging
 
-from .services.cli_parser import CLIParser
-from .services.file_loader import FileLoader
-from .services.data_combiner import DataCombiner
 from .exporters.exporter_factory import ExporterFactory
+from .services.cli_parser import CLIParser
+from .services.data_combiner import DataCombiner
 from .services.data_filter import DataFilter
+from .services.file_loader import FileLoader
 
 logging.getLogger().setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
@@ -25,6 +25,7 @@ def start_application() -> None:
         logger.info(student_file, room_file, output_format, output_destination)
 
         rooms = DataFilter.filter_data(FileLoader.load_file_data(room_file), "room")
+
         students = DataFilter.filter_data(
             FileLoader.load_file_data(student_file), "student"
         )

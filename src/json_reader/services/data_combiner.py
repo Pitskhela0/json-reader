@@ -31,7 +31,7 @@ class DataCombiner:
                     {"id": student["id"], "name": student["name"]}
                 )
             except KeyError as e:
-                raise ValueError(f"Student record missing required key: {e}") from e
+                raise ValueError(f"Student record " f"missing required key: {e}") from e
 
         return students_by_room
 
@@ -63,4 +63,4 @@ class DataCombiner:
                     "students": students_by_room.get(room["id"], []),
                 }
             except KeyError as e:
-                raise ValueError(f"Room record missing required key: {e}") from e
+                raise ValueError(f"Room record missing " f"required key: {e}") from e
