@@ -32,7 +32,7 @@ class JSONExporter(Exporter):
         """
         if not output_path.endswith(".json"):
             Exporter.default_path_counter += 1
-            output_path = f"default{Exporter.default_path_counter}.json"
+            output_path = f"output/default{Exporter.default_path_counter}.json"
 
         with open(output_path, "w") as file:
             file.write("[")
@@ -61,7 +61,7 @@ class XMLExporter(Exporter):
         """
         if not output_path.endswith(".xml"):
             Exporter.default_path_counter += 1
-            output_path = f"default{Exporter.default_path_counter}.xml"
+            output_path = f"output/default{Exporter.default_path_counter}.xml"
 
         with open(output_path, "w", encoding='utf-8') as file:
             file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
