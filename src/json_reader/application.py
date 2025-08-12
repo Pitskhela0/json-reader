@@ -5,6 +5,7 @@ from .services.cli_parser import CLIParser
 from .services.data_combiner import DataCombiner
 from .services.data_filter import DataFilter
 from .services.file_loader import FileLoader
+from .constants.errors_messages import ErrorMessages
 
 logging.getLogger().setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
@@ -35,5 +36,5 @@ def start_application() -> None:
         exporter = ExporterFactory.create_exporter(output_format)
         exporter.export_file(combined_data, output_destination)
     except Exception as e:
-        logger.error(f"Application failed: {e}")
+        logger.error(ErrorMessages.APPLICATION_FAILED.format(e))
         raise

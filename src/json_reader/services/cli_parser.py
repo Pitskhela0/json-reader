@@ -1,6 +1,7 @@
 import argparse
 import os
 from pathlib import Path
+from ..constants.errors_messages import ErrorMessages
 
 
 class CLIParser:
@@ -21,17 +22,13 @@ class CLIParser:
             output_dir = Path("output")
             if output_dir.exists():
                 if not os.access(output_dir, os.W_OK):
-                    raise ValueError(
-                        f"No write permission " f"for output directory: {output_dir}"
-                    )
+                    raise ValueError(ErrorMessages.NO_WRITE_PERMISSION_DIR.format(output_dir))
             else:
                 try:
                     output_dir.mkdir(parents=True, exist_ok=True)
                     print(f"Created default output directory: {output_dir}")
                 except OSError as e:
-                    raise ValueError(
-                        f"Cannot create output directory {output_dir}: {e}"
-                    ) from e
+                    raise ValueError(ErrorMessages.CANNOT_CREATE_OUTPUT_DIR.format(output_dir, e)) from e
             return
 
         path = Path(output_path)
@@ -39,21 +36,17 @@ class CLIParser:
 
         if parent_dir.exists():
             if not os.access(parent_dir, os.W_OK):
-                raise ValueError(f"No write permission " f"for directory: {parent_dir}")
+                raise ValueError(ErrorMessages.NO_WRITE_PERMISSION_DIR.format(parent_dir))
         else:
             try:
                 parent_dir.mkdir(parents=True, exist_ok=True)
                 print(f"Created output directory: {parent_dir}")
             except OSError as e:
-                raise ValueError(
-                    f"Cannot create output directory {parent_dir}: {e}"
-                ) from e
+                raise ValueError(ErrorMessages.CANNOT_CREATE_OUTPUT_DIR.format(parent_dir, e)) from e
 
         if path.exists():
             if not os.access(path, os.W_OK):
-                raise ValueError(
-                    f"No write permission for existing file: {output_path}"
-                )
+                raise ValueError(ErrorMessages.NO_WRITE_PERMISSION_FILE.format(output_path))
             else:
                 print(
                     f"Warning: Output file {output_path} "
@@ -99,30 +92,27 @@ class CLIParser:
         arguments = parser.parse_args()
 
         if arguments.output_destination != "/output" and (
-            not arguments.output_destination.endswith(".json")
-            and not arguments.output_destination.endswith(".xml")
+                not arguments.output_destination.endswith(".json")
+                and not arguments.output_destination.endswith(".xml")
         ):
-            raise ValueError(
-                f"Custom output path must end with .json "
-                f"or .xml, got: {arguments.output_destination}"
-            )
+            raise ValueError(ErrorMessages.INVALID_FILE_EXTENSION.format(arguments.output_destination))
 
         if (
-            arguments.output_destination.endswith(".json")
-            and arguments.output_format == "xml"
+                arguments.output_destination.endswith(".json")
+                and arguments.output_format == "xml"
         ):
-            raise ValueError("Output format is " "xml and destination types is JSON")
+            raise ValueError(ErrorMessages.FORMAT_MISMATCH_XML_JSON)
 
         if (
-            arguments.output_destination.endswith(".xml")
-            and arguments.output_format == "json"
+                arguments.output_destination.endswith(".xml")
+                and arguments.output_format == "json"
         ):
-            raise ValueError("Output format" " is JSON and destination types is xml")
+            raise ValueError(ErrorMessages.FORMAT_MISMATCH_JSON_XML)
 
         try:
             CLIParser._validate_output_path(arguments.output_destination)
         except ValueError:
-            raise ValueError("Invalid output path")
+            raise ValueError(ErrorMessages.INVALID_OUTPUT_PATH)
 
         return (
             arguments.student_file_path,

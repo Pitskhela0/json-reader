@@ -1,6 +1,7 @@
 from collections.abc import Generator
 
 import ijson
+from ..constants.errors_messages import ErrorMessages
 
 
 class FileLoader:
@@ -27,8 +28,8 @@ class FileLoader:
                 try:
                     yield from ijson.items(file, "item")
                 except ijson.JSONError as e:
-                    raise ValueError(f"Invalid JSON" f" format in file: {path}") from e
+                    raise ValueError(ErrorMessages.INVALID_JSON_FORMAT.format(path)) from e
         except (FileNotFoundError, PermissionError):
             raise
         except OSError as e:
-            raise OSError(f"Error reading file: {path}") from e
+            raise OSError(ErrorMessages.FILE_READ_ERROR.format(path)) from e

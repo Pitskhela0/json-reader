@@ -1,6 +1,7 @@
 import logging
 from abc import ABC, abstractmethod
 from typing import Any, Dict
+from ..constants.errors_messages import ErrorMessages
 
 logging.getLogger().setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
@@ -29,23 +30,19 @@ class RoomValidator(ValidationStrategy):
         """
         try:
             if "id" not in item or "name" not in item:
-                raise ValueError("Room data is incomplete")
+                raise ValueError(ErrorMessages.ROOM_INCOMPLETE_DATA)
 
             room_id, room_name = item["id"], item["name"]
 
             if not isinstance(room_id, int) or room_id < 0:
-                raise ValueError(
-                    f"Room ID must be " f"positive integer, got: {room_id}"
-                )
+                raise ValueError(ErrorMessages.ROOM_INVALID_ID.format(room_id))
 
             if not isinstance(room_name, str) or not room_name.strip():
-                raise ValueError(
-                    f"Room name must be non-empty string, got: {room_name}"
-                )
+                raise ValueError(ErrorMessages.ROOM_INVALID_NAME.format(room_name))
 
             return True
         except Exception as e:
-            logger.error(f"Room validation failed {e}")
+            logger.error(ErrorMessages.ROOM_VALIDATION_FAILED.format(e))
             return False
 
 
@@ -63,29 +60,23 @@ class StudentValidator(ValidationStrategy):
         """
         try:
             if "id" not in item or "name" not in item or "room" not in item:
-                raise ValueError("Student data is incomplete")
+                raise ValueError(ErrorMessages.STUDENT_INCOMPLETE_DATA)
 
             student_id, student_name, room_id = (item["id"], item["name"], item["room"])
 
             if not isinstance(student_id, int) or student_id < 0:
-                raise ValueError(
-                    f"Student ID must be positive integer, got: {student_id}"
-                )
+                raise ValueError(ErrorMessages.STUDENT_INVALID_ID.format(student_id))
 
             if not isinstance(student_name, str) or not student_name.strip():
-                raise ValueError(
-                    f"Student name must be" f" non-empty string, got: {student_name}"
-                )
+                raise ValueError(ErrorMessages.STUDENT_INVALID_NAME.format(student_name))
 
             if not isinstance(room_id, int) or room_id < 0:
-                raise ValueError(
-                    f"Room ID must be positive" f" integer, got: {room_id}"
-                )
+                raise ValueError(ErrorMessages.STUDENT_INVALID_ROOM_ID.format(room_id))
 
             return True
 
         except Exception as e:
-            logger.error(f"Student validation failed: {e}")
+            logger.error(ErrorMessages.STUDENT_VALIDATION_FAILED.format(e))
             return False
 
 
@@ -102,7 +93,7 @@ class ValidatorContext:
             strategy_type: Either 'student' or 'room'
         """
         if strategy_type not in self._strategies:
-            raise ValueError(f"{strategy_type} is unknown to the application")
+            raise ValueError(ErrorMessages.UNKNOWN_VALIDATION_STRATEGY.format(strategy_type))
         self.strategy = self._strategies[strategy_type]()
 
     def execute_validation(self, item: dict) -> bool:

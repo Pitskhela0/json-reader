@@ -10,3 +10,6 @@ wheels/
 .venv
 .idea
 .python-version
+uv.lock
+src/resources
+output
