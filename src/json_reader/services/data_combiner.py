@@ -2,6 +2,7 @@ from collections import defaultdict
 from collections.abc import Generator
 from typing import Any
 from ..constants.errors_messages import ErrorMessages
+from ..constants.data_item_constants import ItemConstants
 
 
 class DataCombiner:
@@ -59,9 +60,9 @@ class DataCombiner:
         for room in rooms:
             try:
                 yield {
-                    "id": room["id"],
-                    "name": room["name"],
-                    "students": students_by_room.get(room["id"], []),
+                    "id": room[ItemConstants.ID_FIELD],
+                    "name": room[ItemConstants.NAME_FIELD],
+                    "students": students_by_room.get(room[ItemConstants.ID_FIELD], []),
                 }
             except KeyError as e:
                 raise ValueError(ErrorMessages.ROOM_MISSING_KEY.format(e)) from e

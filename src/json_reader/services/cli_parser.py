@@ -2,6 +2,7 @@ import argparse
 import os
 from pathlib import Path
 from ..constants.errors_messages import ErrorMessages
+from ..constants.cli_parser_constants import CLIParserConstants
 
 
 class CLIParser:
@@ -65,47 +66,47 @@ class CLIParser:
         parser = argparse.ArgumentParser(description="parse CLI")
 
         parser.add_argument(
-            "--student-file-path",
+            CLIParserConstants.STUDENT_FILE_PATH_ARG,
             type=str,
             required=True,
             help="path to students' json file",
         )
 
         parser.add_argument(
-            "--room-file-path", type=str, required=True, help="path to room json file"
+            CLIParserConstants.ROOM_FILE_PATH_ARG, type=str, required=True, help="path to room json file"
         )
 
         parser.add_argument(
-            "--output-format",
+            CLIParserConstants.OUTPUT_FORMAT_ARG,
             type=str,
-            choices=["json", "xml"],
+            choices=[CLIParserConstants.JSON_FILE_TYPE, CLIParserConstants.XML_FILE_TYPE],
             help="output file format",
         )
 
         parser.add_argument(
-            "--output-destination",
+            CLIParserConstants.OUTPUT_DESTINATION_ARG,
             type=str,
-            default="/output",
+            default=CLIParserConstants.DEFAULT_OUTPUT_DIRECTORY,
             help="output destination",
         )
 
         arguments = parser.parse_args()
 
-        if arguments.output_destination != "/output" and (
-                not arguments.output_destination.endswith(".json")
-                and not arguments.output_destination.endswith(".xml")
+        if arguments.output_destination != CLIParserConstants.DEFAULT_OUTPUT_DIRECTORY and (
+                not arguments.output_destination.endswith(CLIParserConstants.JSON_EXTENSION)
+                and not arguments.output_destination.endswith(CLIParserConstants.XML_EXTENSION)
         ):
             raise ValueError(ErrorMessages.INVALID_FILE_EXTENSION.format(arguments.output_destination))
 
         if (
-                arguments.output_destination.endswith(".json")
-                and arguments.output_format == "xml"
+                arguments.output_destination.endswith(CLIParserConstants.JSON_EXTENSION)
+                and arguments.output_format == CLIParserConstants.XML_FILE_TYPE
         ):
             raise ValueError(ErrorMessages.FORMAT_MISMATCH_XML_JSON)
 
         if (
-                arguments.output_destination.endswith(".xml")
-                and arguments.output_format == "json"
+                arguments.output_destination.endswith(CLIParserConstants.XML_EXTENSION)
+                and arguments.output_format == CLIParserConstants.JSON_FILE_TYPE
         ):
             raise ValueError(ErrorMessages.FORMAT_MISMATCH_JSON_XML)
 

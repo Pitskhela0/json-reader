@@ -2,6 +2,7 @@ import logging
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 from ..constants.errors_messages import ErrorMessages
+from ..constants.data_item_constants import ItemConstants
 
 logging.getLogger().setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
@@ -29,12 +30,12 @@ class RoomValidator(ValidationStrategy):
         - A 'name' that's not empty
         """
         try:
-            if "id" not in item or "name" not in item:
+            if ItemConstants.ID_FIELD not in item or ItemConstants.NAME_FIELD not in item:
                 raise ValueError(ErrorMessages.ROOM_INCOMPLETE_DATA)
 
-            room_id, room_name = item["id"], item["name"]
+            room_id, room_name = item[ItemConstants.ID_FIELD], item[ItemConstants.NAME_FIELD]
 
-            if not isinstance(room_id, int) or room_id < 0:
+            if not isinstance(room_id, int) or room_id < ItemConstants.MIN_ROOM_ID:
                 raise ValueError(ErrorMessages.ROOM_INVALID_ID.format(room_id))
 
             if not isinstance(room_name, str) or not room_name.strip():
@@ -59,18 +60,18 @@ class StudentValidator(ValidationStrategy):
         - A 'room' that's a positive number
         """
         try:
-            if "id" not in item or "name" not in item or "room" not in item:
+            if ItemConstants.ID_FIELD not in item or ItemConstants.NAME_FIELD not in item or ItemConstants.ROOM_FIELD not in item:
                 raise ValueError(ErrorMessages.STUDENT_INCOMPLETE_DATA)
 
-            student_id, student_name, room_id = (item["id"], item["name"], item["room"])
+            student_id, student_name, room_id = (item[ItemConstants.ID_FIELD], item[ItemConstants.NAME_FIELD], item[ItemConstants.ROOM_FIELD])
 
-            if not isinstance(student_id, int) or student_id < 0:
+            if not isinstance(student_id, int) or student_id < ItemConstants.MIN_STUDENT_ID:
                 raise ValueError(ErrorMessages.STUDENT_INVALID_ID.format(student_id))
 
             if not isinstance(student_name, str) or not student_name.strip():
                 raise ValueError(ErrorMessages.STUDENT_INVALID_NAME.format(student_name))
 
-            if not isinstance(room_id, int) or room_id < 0:
+            if not isinstance(room_id, int) or room_id < ItemConstants.MIN_ROOM_ID:
                 raise ValueError(ErrorMessages.STUDENT_INVALID_ROOM_ID.format(room_id))
 
             return True
@@ -83,7 +84,7 @@ class StudentValidator(ValidationStrategy):
 class ValidatorContext:
     """Picks the right validator for the type of data you're checking."""
 
-    _strategies = {"student": StudentValidator, "room": RoomValidator}
+    _strategies = {ItemConstants.STUDENT_STRATEGY: StudentValidator, ItemConstants.ROOM_STRATEGY: RoomValidator}
 
     def __init__(self, strategy_type: str):
         """
